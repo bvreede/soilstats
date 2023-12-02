@@ -5,15 +5,27 @@ from .soilgrids import SoilGrids
 class SoilData:
     """Class for collecting and analyzing soil data."""
 
+    # keys to select the appropriate data from the API response
     _property_key = "properties"
     _layer_key = "layers"
     _record_path = ["depths"]
     _meta = ["name", ["unit_measure", "mapped_units"]]
 
+    # geo boundaries for verification
     _boundaries = {
         "lat": (-90, 90),
         "lon": (-180, 180)
     }
+
+    # used in _clean_data to rename columns
+    _clean_columns = {
+        "label": "depth",
+        "name": "property",
+        "unit_measure.mapped_units": "units"
+    }
+
+    # used in _clean_data to reorder columns
+    _first_columns = ["lat", "lon", "property"]
 
     def __init__(self,
                  lat: float,
@@ -33,19 +45,46 @@ class SoilData:
         return NotImplemented
 
     def get_data(self):
-        """Get soil data from the SoilGrids API and return a data frame."""
+        """Return data from the SoilGrids API as a data frame."""
+        if not hasattr(self, "_df"):
+            self._get_data()
+        return self._df
+
+    def _get_data(self):
+        """Get data from the SoilGrids API.
+
+        Use the properties to call the SoilGrids API.
+        Generate a data frame fom the API response.
+        """
         sg = SoilGrids(self.lat, self.lon,
                        properties=self.properties,
                        depths=self.depths,
                        values=self.values)
         # for verification purposes, the URL is stored as an attribute
         self.url = sg.url
-
         response = sg.get().json()
         layers = response[self._property_key][self._layer_key]
-        return pd.json_normalize(layers,
+        self._df = pd.json_normalize(layers,
                                  record_path=self._record_path,
                                  meta=self._meta)
+        self._clean_data()
+
+    def _clean_data(self):
+        """Clean up the data frame.
+
+        - rename obscurely named columns
+        - add latitude and longitude
+        - reorder columns to increase readability
+        """
+        self._df.rename(columns=self._clean_columns, inplace=True)
+        if not self._df.empty:
+            self._df['lat']=self.lat
+            self._df['lon']=self.lon
+        for col in self._first_columns[::-1]:
+            try:
+                self._df.insert(0, col, self._df.pop(col))
+            except KeyError:
+                continue
 
     def analyze(self):
         """Analyze soil data."""
