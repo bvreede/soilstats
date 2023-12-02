@@ -3,7 +3,6 @@ class SoilData:
 
     def __init__(self):
         """Initialize class."""
-        return NotImplemented
 
     def set_boundaries(self):
         """Set boundaries for soil data collection."""

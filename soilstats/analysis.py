@@ -3,7 +3,6 @@ class AnalyseSoil:
 
     def __init__(self):
         """Initialize class."""
-        return NotImplemented
 
     def regression(self):
         """Perform regression analysis."""
