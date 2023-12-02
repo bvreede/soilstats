@@ -8,12 +8,12 @@ echo "Starting ruff analysis..."
 # quietly run ruff
 ruff . --fix
 
-# use return code to abort commit if necessary
+# report failing ruff analysis
+# because ruff is run on all files, not just those in the commit,
+# we do not abort the commit, but instead show how to recommit if the user desires.
 if [ $? != "0" ]; then
-    echo "Commit aborted. Fix linter issues found by ruff before committing."
-    exit 1
+    echo "\033[1mRuff analysis failed!"
+    echo "Recommend fixing ruff errors and recommitting (git commit --amend)\033[0m"
+else
+    echo "Pre-commit checks completed successfully."
 fi
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-echo "Pre-commit checks completed successfully."
-exit 0
