@@ -51,8 +51,7 @@ class SoilData:
         return self._df
 
     def _get_data(self):
-        """
-        Get data from the SoilGrids API.
+        """Get data from the SoilGrids API.
 
         Use the properties to call the SoilGrids API.
         Generate a data frame fom the API response.
