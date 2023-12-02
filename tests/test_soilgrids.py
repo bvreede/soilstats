@@ -8,7 +8,8 @@ class TestSoilGrids:
                        properties=["clay", "ocs", "sand", "silt"],
                        depths=["0-30cm"],
                        values=["mean"])
-        assert sg.loc == (56, 9)
+        assert sg.lat == 56
+        assert sg.values == ["mean"]
 
     def test_url(self):
         sg = SoilGrids(lat=56, lon=9,
