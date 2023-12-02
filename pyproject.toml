@@ -23,7 +23,9 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-dependencies = []
+dependencies = [
+    "pandas"
+]
 description = "Technical task for Agreena RSE position. Retrieves and analyses soil properties."
 keywords = [
     "agreena",
