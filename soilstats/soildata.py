@@ -40,10 +40,6 @@ class SoilData:
         self.depths = self._enlist(depths)
         self.values = self._enlist(values)
 
-    def set_boundaries(self):
-        """Set boundaries for soil data collection."""
-        return NotImplemented
-
     def get_data(self):
         """Return data from the SoilGrids API as a data frame."""
         if not hasattr(self, "_df"):
@@ -85,10 +81,6 @@ class SoilData:
                 self._df.insert(0, col, self._df.pop(col))
             except KeyError:
                 continue
-
-    def analyze(self):
-        """Analyze soil data."""
-        return NotImplemented
 
     @classmethod
     def _verify(cls, value, datatype):
