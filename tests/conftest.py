@@ -1,4 +1,5 @@
 import pytest
+from soilstats.soilcollect import SoilCollect
 from soilstats.soildata import SoilData
 
 
@@ -19,3 +20,13 @@ def sd_empty() -> SoilData:
                     properties='clay',
                     depths='0-30cm',
                     values="mean")
+
+@pytest.fixture
+def sc() -> SoilCollect:
+    """SoilCollect object."""
+    return SoilCollect(properties=['clay', 'sand', 'silt', "nitrogen"],
+                    depths=["0-5cm", "0-30cm", "5-15cm", "60-100cm"],
+                    values="mean",
+                    lat_bounds=[55, 57],
+                    lon_bounds=[8, 10],
+                    n=10)

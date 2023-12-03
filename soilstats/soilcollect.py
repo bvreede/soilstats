@@ -1,9 +1,10 @@
 import random
 import pandas as pd
+from .analysis.analysis import Analyse
 from .soildata import SoilData
 
 
-class SoilCollect:
+class SoilCollect(Analyse):
     """Class for collecting soil data for multiple locations within a grid."""
 
     def __init__(self, properties, depths, values, lat_bounds, lon_bounds, n = 50):
@@ -21,9 +22,9 @@ class SoilCollect:
             lon_bounds (list[floats]): boundaries for longitude; e.g. [10, 15]
             n (int, optional): number of locations to sample within the boundaries. Defaults to 50.
         """
-        self._properties = properties
-        self._depths = depths
-        self._values = values
+        self.properties = properties
+        self.depths = depths
+        self.values = values
 
         self._locations = self._random_points(lat_bounds, lon_bounds, n)
         self._sdpoints = self._init_soildata()
@@ -36,9 +37,9 @@ class SoilCollect:
     def _init_soildata(self):
         """Initialize SoilData objects for each location."""
         return [SoilData(lat, lon,
-                         properties=self._properties,
-                         depths=self._depths,
-                         values=self._values) for lat, lon in self._locations]
+                         properties=self.properties,
+                         depths=self.depths,
+                         values=self.values) for lat, lon in self._locations]
 
     @property
     def locations(self):

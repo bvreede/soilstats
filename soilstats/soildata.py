@@ -1,9 +1,10 @@
 import warnings
 import pandas as pd
+from .analysis.analysis import Analyse
 from .soilgrids import SoilGrids
 
 
-class SoilData:
+class SoilData(Analyse):
     """Class for collecting and analyzing soil data."""
 
     # keys to select the appropriate data from the API response
