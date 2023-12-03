@@ -40,6 +40,10 @@ class SoilData:
         self.depths = self._enlist(depths)
         self.values = self._enlist(values)
 
+        # set up soilgrid object and store the URL for verification purposes
+        self._sg = self._setup_soilgrid()
+        self.url = self._sg.url
+
     def get_data(self):
         """Return data from the SoilGrids API as a data frame."""
         if not hasattr(self, "_df"):
@@ -52,13 +56,7 @@ class SoilData:
         Use the properties to call the SoilGrids API.
         Generate a data frame fom the API response.
         """
-        sg = SoilGrids(self.lat, self.lon,
-                       properties=self.properties,
-                       depths=self.depths,
-                       values=self.values)
-        # for verification purposes, the URL is stored as an attribute
-        self.url = sg.url
-        response = sg.get().json()
+        response = self._sg.get().json()
         layers = response[self._property_key][self._layer_key]
         self._df = pd.json_normalize(layers,
                                  record_path=self._record_path,
@@ -81,6 +79,12 @@ class SoilData:
                 self._df.insert(0, col, self._df.pop(col))
             except KeyError:
                 continue
+
+    def _setup_soilgrid(self):
+        return SoilGrids(self.lat, self.lon,
+                properties=self.properties,
+                depths=self.depths,
+                values=self.values)
 
     @classmethod
     def _verify(cls, value, datatype):

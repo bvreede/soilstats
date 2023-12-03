@@ -26,11 +26,24 @@ class SoilCollect:
         self._values = values
 
         self._locations = self._random_points(lat_bounds, lon_bounds, n)
+        self._sdpoints = self._init_soildata()
+
+    def _init_soildata(self):
+        """Initialize SoilData objects for each location."""
+        return [SoilData(lat, lon,
+                         properties=self._properties,
+                         depths=self._depths,
+                         values=self._values) for lat, lon in self._locations]
 
     @property
     def locations(self):
         """Return locations."""
         return self._locations
+
+    @property
+    def soildatapoints(self):
+        """Return SoilData objects."""
+        return self._sdpoints
 
     @classmethod
     def _random_points(cls, lat_bounds, lon_bounds, n):
