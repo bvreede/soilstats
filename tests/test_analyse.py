@@ -36,3 +36,13 @@ class TestAnalyse():
         assert isinstance(meanval, pd.DataFrame)
         assert meanval.shape == (40, 5)
         assert meanval.columns.tolist() == ['lat', 'lon', 'units', 'property', 'values.mean']
+
+    def test_pivot(self, patched_sc):
+        pivot = patched_sc._pivot_for_model(patched_sc.df)
+        assert pivot.columns.tolist() == ['lat', 'lon', 'clay', 'nitrogen', 'sand', 'silt']
+        assert pivot.shape == (10, 6)
+
+    def test_linear_model(self, patched_sc):
+        model = patched_sc.regression(formula = "clay + sand + silt ~ ocs")
+        assert model.formula == "clay + sand + silt ~ ocs"
+        assert model.stats == {'r_squared': 0.0001, 'intercept': 0.0, 'slope': 0.0}

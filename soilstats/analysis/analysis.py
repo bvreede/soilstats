@@ -85,10 +85,21 @@ class Analyse:
         """Select rows with specific content in a column."""
         return df[df[col].isin(content)]
 
-    def regression(self):
+    def regression(self, formula):
         """Perform regression analysis."""
-        return NotImplemented
+        df = self._pivot_for_model(self.df)
+        return Model(formula = formula, data = df)
 
     def summary(self):
         """Return summary statistics."""
-        self.df
+        return NotImplemented
+
+    @classmethod
+    def _pivot_for_model(cls, df):
+        """Perform a pivot on the data frame to prepare for regression analysis."""
+        # TODO remove hardcoded variable names
+        return (df.groupby(['lat', 'lon', 'property'])
+                .agg(value=('values.mean', 'max'))
+                .pivot_table(index=['lat', 'lon'], columns='property', values='value')
+        .reset_index()
+        )
