@@ -1,9 +1,10 @@
 class Analyse:
     """Mixin class with analysis methods for soil data."""
     # column names used in the analysis
-    _grouping = ["lat", "lon", "units"]
-    _valuename = "values."
+    _grouping = ["lat", "lon", "units"] # standard grouping for all methods
+    _valuename = "values." # e.g. "values.mean"
     _propertyname = "property"
+    _depthname = "depth"
 
     @property
     def df(self):
@@ -15,11 +16,10 @@ class Analyse:
         return NotImplemented
 
     def top_property(self, properties = None, value = "mean"):
-        """Return dataframe with the highest values for each location."""
-        if properties is None:
-            properties = self.properties
-
+        """Return dataframe with the highest scoring properties for each coordinate."""
+        properties = self.properties if properties is None else properties
         valuecol = f"{self._valuename}{value}"
+
         df = self._select_content(self.df, self._propertyname, properties)
         df = self._numeric_and_remove_nans(df, valuecol)
 
@@ -27,6 +27,49 @@ class Analyse:
         columns = self._grouping + [self._propertyname, valuecol]
 
         return df.loc[max_indices, columns].reset_index(drop=True)
+
+
+    def max_values(self, properties = None, value = "mean"):
+        """Return a dataframe with the highest values per property for each coordinate.
+
+        Given multiple depths in the data frame, this method will return the highest value for each location.
+
+        Args:
+            properties (list, optional): properties to include. Defaults to None, which includes all properties.
+            value (str, optional): value to consider. Defaults to "mean".
+        """
+        properties = self.properties if properties is None else properties
+        valuecol = f"{self._valuename}{value}"
+
+        df = self._select_content(self.df, self._propertyname, properties)
+        df = self._numeric_and_remove_nans(df, valuecol)
+
+        grouping = self._grouping + [self._propertyname]
+
+        max_indices = df.groupby(grouping)[valuecol].idxmax(skipna=True)
+        columns = self._grouping + [self._propertyname, self._depthname, valuecol]
+
+        return df.loc[max_indices, columns].reset_index(drop=True)
+
+    def mean_values(self, properties = None, value = "mean"):
+        """Return a dataframe with the average values per property for each coordinate.
+
+        Given multiple depths in the data frame, this method will return averages for each location.
+
+        Args:
+            properties (list, optional): properties to include. Defaults to None, which includes all properties.
+            value (str, optional): value to consider. Defaults to "mean".
+        """
+        properties = self.properties if properties is None else properties
+        valuecol = f"{self._valuename}{value}"
+
+        df = self._select_content(self.df, self._propertyname, properties)
+        df = self._numeric_and_remove_nans(df, valuecol)
+
+        grouping = self._grouping + [self._propertyname]
+
+        return df.groupby(grouping).agg({valuecol: "mean"}).reset_index()
+
 
     @classmethod
     def _numeric_and_remove_nans(cls, df, col):

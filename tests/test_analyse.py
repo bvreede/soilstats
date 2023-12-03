@@ -24,3 +24,15 @@ class TestAnalyse():
         assert isinstance(top, pd.DataFrame)
         assert top.shape == (20, 5)
         assert top.columns.tolist() == ['lat', 'lon', 'units', 'property', 'values.mean']
+
+    def test_max_values(self, patched_sc):
+        maxval = patched_sc.max_values()
+        assert isinstance(maxval, pd.DataFrame)
+        assert maxval.shape == (40, 6)
+        assert maxval.columns.tolist() == ['lat', 'lon', 'units', 'property', 'depth', 'values.mean']
+
+    def test_mean_values(self, patched_sc):
+        meanval = patched_sc.mean_values()
+        assert isinstance(meanval, pd.DataFrame)
+        assert meanval.shape == (40, 5)
+        assert meanval.columns.tolist() == ['lat', 'lon', 'units', 'property', 'values.mean']
