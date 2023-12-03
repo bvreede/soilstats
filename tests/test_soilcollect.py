@@ -1,7 +1,7 @@
 from contextlib import nullcontext as does_not_raise
+import pandas as pd
 import pytest
 from soilstats.soilcollect import SoilCollect
-import pandas as pd
 
 # ruff: noqa: D101, D102
 

@@ -49,12 +49,13 @@ class TestSoilData:
         assert list(df.columns[:3]) == ["lat", "lon", "property"]
 
     def test_empty_data(self):  #TODO: monkeypatch the test instead of calling the API
-        sd = SoilData(lat = 56.225297,
-                lon = 8.662215,
-                properties='clay',
-                depths='0-30cm',
-                values="mean")
-        df = sd.get_data()
+        with pytest.warns(match = "No data found"):
+            sd = SoilData(lat = 56.225297,
+                    lon = 8.662215,
+                    properties='clay',
+                    depths='0-30cm',
+                    values="mean")
+            df = sd.get_data()
         assert df.empty
 
 

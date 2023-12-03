@@ -48,6 +48,7 @@ class SoilCollect:
     @property
     def soildatapoints(self):
         """Return SoilData objects."""
+        #TODO return them in a nice & logical way
         return self._sdpoints
 
     @classmethod
