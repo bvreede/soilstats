@@ -26,7 +26,7 @@ class TestSoilCollect:
             assert len(sc.locations[0]) == 2
 
 
-    def test_get_data(self, sd_large, monkeypatch):
+    def test_get_data(self, monkeypatch):
         def large_json(sd_large):
             with open("tests/data/large.json") as f:
                 return json.load(f)
