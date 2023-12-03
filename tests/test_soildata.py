@@ -1,3 +1,4 @@
+import json
 from contextlib import nullcontext as does_not_raise
 import pandas as pd
 import pytest
@@ -26,42 +27,29 @@ class TestSoilData:
             assert sd.lat == lat_expect
             assert sd.values == value_expect
 
-    def test_get_data(self): #TODO: monkeypatch the test instead of calling the API
-        sd = SoilData(
-            lat=50,
-            lon=10,
-            properties="clay",
-            depths="0-5cm",
-            values="mean"
-        )
-        df = sd.get_data()
+    def test_get_data(self, sd_large, monkeypatch):
+        def large_json(sd_large):
+            with open("tests/data/large.json") as f:
+                return json.load(f)
+
+        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", large_json)
+
+        df = sd_large.get_data()
         assert isinstance(df, pd.DataFrame)
 
-    def test_clean_data(self):  #TODO: monkeypatch the test instead of calling the API
-        sd = SoilData(lat = 56.225297,
-                lon = 8.662215,
-                properties=['clay', 'sand', 'silt', "nitrogen"],
-                depths=["0-5cm", "0-30cm", "5-15cm", "60-100cm"],
-                values="mean")
-        df = sd.get_data()
+        # check cleaning functionality
         assert "units" in df.columns
         assert "depth" in df.columns
         assert list(df.columns[:3]) == ["lat", "lon", "property"]
 
-    def test_empty_data(self):  #TODO: monkeypatch the test instead of calling the API
+    def test_empty_data(self, sd_empty, monkeypatch):
+        def empty_json(sd_empty):
+            with open("tests/data/empty.json") as f:
+                return json.load(f)
+
+        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", empty_json)
+
         with pytest.warns(match = "No data found"):
-            sd = SoilData(lat = 56.225297,
-                    lon = 8.662215,
-                    properties='clay',
-                    depths='0-30cm',
-                    values="mean")
-            df = sd.get_data()
+            df = sd_empty.get_data()
         assert df.empty
-
-
-
-
-
-
-
 

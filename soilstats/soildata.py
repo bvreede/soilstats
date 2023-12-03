@@ -63,7 +63,7 @@ class SoilData(Analyse):
         Use the properties to call the SoilGrids API.
         Generate a data frame fom the API response.
         """
-        response = self._sg.get().json()
+        response = self._sg.get()
         layers = response[self._property_key][self._layer_key]
         self._df = pd.json_normalize(layers,
                                  record_path=self._record_path,
