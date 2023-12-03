@@ -27,7 +27,13 @@ class TestSoilData:
             assert sd.lat == lat_expect
             assert sd.values == value_expect
 
-    def test_get_data(self, sd_large): #TODO: monkeypatch the test instead of calling the API
+    def test_get_data(self, sd_large, monkeypatch):
+        def large_json(sd_large):
+            with open("tests/data/large.json") as f:
+                return json.load(f)
+
+        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", large_json)
+
         df = sd_large.get_data()
         assert isinstance(df, pd.DataFrame)
 

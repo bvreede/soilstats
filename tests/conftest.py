@@ -19,4 +19,3 @@ def sd_empty() -> SoilData:
                     properties='clay',
                     depths='0-30cm',
                     values="mean")
-
