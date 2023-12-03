@@ -28,6 +28,11 @@ class SoilCollect:
         self._locations = self._random_points(lat_bounds, lon_bounds, n)
         self._sdpoints = self._init_soildata()
 
+    def get_data(self):
+        """Return data from the SoilGrids API as a data frame."""
+        dfs = [sd.get_data() for sd in self._sdpoints]
+        return pd.concat(dfs, ignore_index=True)
+
     def _init_soildata(self):
         """Initialize SoilData objects for each location."""
         return [SoilData(lat, lon,
