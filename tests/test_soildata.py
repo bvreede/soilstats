@@ -7,20 +7,20 @@ from soilstats.soildata import SoilData
 
 class TestSoilData:
     @pytest.mark.parametrize("args, lat_expect, value_expect, error", [
-    ([50,10,"clay", "0-30cm", "mean"], 50, ["mean"], does_not_raise()),
-    ([50,10,"clay", "0-30cm", ["mean"]], 50, ["mean"], does_not_raise()),
-    ([50,250,"clay", "0-30cm", ["mean"]], None, ["mean"], pytest.raises(ValueError)),
-    ([-100,10,"clay", "0-30cm", ["mean"]], None, ["mean"], pytest.raises(ValueError)),
-    ([50,"text","clay", "0-30cm", ["mean"]], None, ["mean"], pytest.raises(TypeError)),
+    ([50,10, "mean"], 50, ["mean"], does_not_raise()),
+    ([50,10, ["mean"]], 50, ["mean"], does_not_raise()),
+    ([50,250, ["mean"]], None, ["mean"], pytest.raises(ValueError)),
+    ([-100,10, ["mean"]], None, ["mean"], pytest.raises(ValueError)),
+    ([50,"text", ["mean"]], None, ["mean"], pytest.raises(TypeError)),
 ])
     def test_constructor(self, args, lat_expect, value_expect, error):
-        lat, lon, properties, depths, values = args
+        lat, lon, values = args
         with error:
             sd = SoilData(
                 lat=lat,
                 lon=lon,
-                properties=properties,
-                depths=depths,
+                properties="clay",
+                depths="0-30cm",
                 values=values
             )
             assert sd.lat == lat_expect
