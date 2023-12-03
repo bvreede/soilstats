@@ -1,3 +1,6 @@
+from .model import Model
+
+
 class Analyse:
     """Mixin class with analysis methods for soil data."""
     # column names used in the analysis
@@ -69,7 +72,6 @@ class Analyse:
         grouping = self._grouping + [self._propertyname]
 
         return df.groupby(grouping).agg({valuecol: "mean"}).reset_index()
-
 
     @classmethod
     def _numeric_and_remove_nans(cls, df, col):
