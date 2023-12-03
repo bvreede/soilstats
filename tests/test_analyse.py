@@ -1,27 +1,26 @@
 import json
 import pandas as pd
-from soilstats.soilcollect import SoilCollect
+import pytest
 
 # ruff: noqa: D101, D102
 
-class TestAnalyse:
-    def test_top_property(self, monkeypatch):
-        def large_json(sd_large):
+class TestAnalyse():
+    @pytest.fixture
+    def patched_sc(self, sc, monkeypatch):
+        def jsondata(sc):
             with open("tests/data/large.json") as f:
                 return json.load(f)
 
-        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", large_json)
+        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", jsondata)
+        sc.get_data()
+        yield sc
 
-        sc = SoilCollect(properties=['clay', 'sand', 'silt', "nitrogen"],
-                         depths=["0-5cm", "0-30cm", "5-15cm", "60-100cm"],
-                         values="mean",
-                         lat_bounds=[55, 57],
-                         lon_bounds=[8, 10],
-                         n=10)
+    def test_df(self, patched_sc):
+        assert isinstance(patched_sc.df, pd.DataFrame)
+        assert patched_sc.df.shape == (120, 9)
 
-        assert isinstance(sc.df, pd.DataFrame)
-
-        top = sc.top_property()
+    def test_top_property(self, patched_sc):
+        top = patched_sc.top_property()
         assert isinstance(top, pd.DataFrame)
         assert top.shape == (20, 5)
         assert top.columns.tolist() == ['lat', 'lon', 'units', 'property', 'values.mean']
