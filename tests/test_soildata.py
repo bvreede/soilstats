@@ -26,36 +26,18 @@ class TestSoilData:
             assert sd.lat == lat_expect
             assert sd.values == value_expect
 
-    def test_get_data(self): #TODO: monkeypatch the test instead of calling the API
-        sd = SoilData(
-            lat=50,
-            lon=10,
-            properties="clay",
-            depths="0-5cm",
-            values="mean"
-        )
-        df = sd.get_data()
+    def test_get_data(self, sd_large): #TODO: monkeypatch the test instead of calling the API
+        df = sd_large.get_data()
         assert isinstance(df, pd.DataFrame)
 
-    def test_clean_data(self):  #TODO: monkeypatch the test instead of calling the API
-        sd = SoilData(lat = 56.225297,
-                lon = 8.662215,
-                properties=['clay', 'sand', 'silt', "nitrogen"],
-                depths=["0-5cm", "0-30cm", "5-15cm", "60-100cm"],
-                values="mean")
-        df = sd.get_data()
+        # check cleaning functionality
         assert "units" in df.columns
         assert "depth" in df.columns
         assert list(df.columns[:3]) == ["lat", "lon", "property"]
 
-    def test_empty_data(self):  #TODO: monkeypatch the test instead of calling the API
+    def test_empty_data(self, sd_empty):  #TODO: monkeypatch the test instead of calling the API
         with pytest.warns(match = "No data found"):
-            sd = SoilData(lat = 56.225297,
-                    lon = 8.662215,
-                    properties='clay',
-                    depths='0-30cm',
-                    values="mean")
-            df = sd.get_data()
+            df = sd_empty.get_data()
         assert df.empty
 
 
