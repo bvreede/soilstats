@@ -1,3 +1,4 @@
+import json
 from contextlib import nullcontext as does_not_raise
 import pandas as pd
 import pytest
@@ -25,12 +26,20 @@ class TestSoilCollect:
             assert len(sc.locations[0]) == 2
 
 
-    def test_get_data(self):
-        sc = SoilCollect(properties="ocs",
-                         depths="0-30cm",
+    def test_get_data(self, sd_large, monkeypatch):
+        def large_json(sd_large):
+            with open("tests/data/large.json") as f:
+                return json.load(f)
+
+        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", large_json)
+
+        sc = SoilCollect(properties=['clay', 'sand', 'silt', "nitrogen"],
+                         depths=["0-5cm", "0-30cm", "5-15cm", "60-100cm"],
                          values="mean",
-                         lat_bounds=[50, 55],
+                         lat_bounds=[55, 57],
                          lon_bounds=[8, 10],
-                         n=3)
+                         n=10)
+
         df = sc.get_data()
         assert isinstance(df, pd.DataFrame)
+        assert df.shape == (120, 9)

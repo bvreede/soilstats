@@ -29,8 +29,8 @@ class SoilGrids:
         self.values = values
 
     def get(self):
-        """Get response from SoilGrids API."""
-        return requests.get(self.url)
+        """Get json data from SoilGrids API."""
+        return requests.get(self.url).json()
 
     @property
     def url(self):
