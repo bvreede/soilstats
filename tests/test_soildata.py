@@ -1,3 +1,4 @@
+import json
 from contextlib import nullcontext as does_not_raise
 import pandas as pd
 import pytest
@@ -35,15 +36,14 @@ class TestSoilData:
         assert "depth" in df.columns
         assert list(df.columns[:3]) == ["lat", "lon", "property"]
 
-    def test_empty_data(self, sd_empty):  #TODO: monkeypatch the test instead of calling the API
+    def test_empty_data(self, sd_empty, monkeypatch):
+        def empty_json(sd_empty):
+            with open("tests/data/empty.json") as f:
+                return json.load(f)
+
+        monkeypatch.setattr("soilstats.soilgrids.SoilGrids.get", empty_json)
+
         with pytest.warns(match = "No data found"):
             df = sd_empty.get_data()
         assert df.empty
-
-
-
-
-
-
-
 

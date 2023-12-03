@@ -26,7 +26,6 @@ class TestSoilGrids:
                        depths=["0-30cm"],
                        values=["mean"])
         response = sg.get()
-        assert response.status_code == 200
-        assert response.json()["geometry"]["coordinates"] == [lon, lat]
-        assert isinstance(response.json()["properties"]["layers"], list)
+        assert response["geometry"]["coordinates"] == [lon, lat]
+        assert isinstance(response["properties"]["layers"], list)
 
