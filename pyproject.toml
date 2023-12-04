@@ -25,6 +25,7 @@ classifiers = [
 ]
 dependencies = [
     "pandas",
+    "rpy2"
 ]
 description = "Technical task for RSE position. Retrieves and analyses soil properties."
 keywords = [
