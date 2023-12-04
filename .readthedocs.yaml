@@ -16,5 +16,5 @@ python:
       extra_requirements:
         - dev
 
-  system_packages:
-    - r-base
+system_packages:
+  - r-base
