@@ -1,5 +1,10 @@
 """Documentation about soilstats."""
 import logging
+# import main modules so they are easily available to the user
+from soilstats.soilcollect import SoilCollect
+from soilstats.soildata import SoilData
+
+# ruff: noqa: F401
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
