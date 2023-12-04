@@ -14,9 +14,7 @@ This repository was built as part of a technical task. Soilstats retrieves and a
 To install soilstats from this repository, run the following:
 
 ```console
-git clone git@github.com:bvreede/soilstats.git
-cd soilstats
-python -m pip install .
+python -m pip install -U  git+https://github.com/bvreede/soilstats.git
 ```
 
 ## Demo
