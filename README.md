@@ -21,7 +21,7 @@ python -m pip install .
 
 ## Demo
 
-To explore the tools of soilstats, take a look at the demo notebook at [demo.ipynb](demo.ipynb).
+To explore the tools of soilstats, take a look at the demo notebook at [demo.ipynb](docs/demo.ipynb).
 
 
 ## Acknowledgements
