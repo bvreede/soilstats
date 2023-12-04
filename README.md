@@ -17,9 +17,14 @@ To install soilstats from this repository, run the following:
 python -m pip install -U  git+https://github.com/bvreede/soilstats.git
 ```
 
+## Documentation
+
+The API documentation can be found [on readthedocs](https://soilstats.readthedocs.io/en/latest/).
+
+
 ## Demo
 
-To explore the tools of soilstats, take a look at the demo notebook at [demo.ipynb](docs/demo.ipynb).
+To explore the tools of soilstats, take a look at [the demo notebook](docs/demo.ipynb).
 
 
 ## Acknowledgements
