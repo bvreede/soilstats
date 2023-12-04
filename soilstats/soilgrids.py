@@ -30,7 +30,11 @@ class SoilGrids:
 
     def get(self):
         """Get json data from SoilGrids API."""
-        return requests.get(self.url).json()
+        response = requests.get(self.url)
+        if response.status_code == 200:
+            return requests.get(self.url).json()
+        else:
+            raise ValueError(f"The SoilGrids API call failed with status code {response.status_code}")
 
     @property
     def url(self):
