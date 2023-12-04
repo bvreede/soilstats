@@ -5,6 +5,8 @@ import logging
 from soilstats.soilcollect import SoilCollect
 from soilstats.soildata import SoilData
 
+# ruff: noqa: F401
+
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = "Barbara Vreede"
