@@ -19,6 +19,10 @@ cd soilstats
 python -m pip install .
 ```
 
+## Demo
+
+To explore the tools of soilstats, take a look at the demo notebook at [demo.ipynb](demo.ipynb).
+
 
 ## Acknowledgements
 
