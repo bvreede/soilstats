@@ -25,6 +25,8 @@ class SoilCollect(Analyse):
         self.properties = properties
         self.depths = depths
         self.values = values
+        self.latitude = [min(lat_bounds), max(lat_bounds)]
+        self.longitude = [min(lon_bounds), max(lon_bounds)]
 
         self._locations = self._random_points(lat_bounds, lon_bounds, n)
         self._sdpoints = self._init_soildata()
@@ -32,14 +34,27 @@ class SoilCollect(Analyse):
     def get_data(self):
         """Return data from the SoilGrids API as a data frame."""
         dfs = [sd.get_data() for sd in self._sdpoints]
+        empty = sum(df.empty for df in dfs)
+        pointswdata = len(dfs) - empty
+        print(f"Data from {pointswdata} points. {empty} out of {len(dfs)} locations returned no data.")
+        print("Run .add_points(n) to add more points to the SoilCollect object.")
         return pd.concat(dfs, ignore_index=True)
 
-    def _init_soildata(self):
+    def add_points(self, n):
+        """Add more datapoints to the existing SoilCollect object."""
+        new_locations = self._random_points(self.latitude, self.longitude, n)
+        self._locations += new_locations
+        new_datapoints = self._init_soildata(new_locations)
+        self._sdpoints += new_datapoints
+
+    def _init_soildata(self, points = None):
         """Initialize SoilData objects for each location."""
+        if points is None:
+            points = self._locations
         return [SoilData(lat, lon,
                          properties=self.properties,
                          depths=self.depths,
-                         values=self.values) for lat, lon in self._locations]
+                         values=self.values) for lat, lon in points]
 
     @property
     def locations(self):
