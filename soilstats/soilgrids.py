@@ -1,3 +1,4 @@
+import time
 import requests
 
 
@@ -30,7 +31,14 @@ class SoilGrids:
 
     def get(self):
         """Get json data from SoilGrids API."""
-        response = requests.get(self.url)
+        response_code = 429
+        # always add a short delay to avoid overloading the API
+        time.sleep(15)
+        while response_code == 429:
+            response = requests.get(self.url)
+            response_code = response.status_code
+            if response_code == 429:
+                time.sleep(30)
         if response.status_code == 200:
             return requests.get(self.url).json()
         else:

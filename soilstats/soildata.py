@@ -50,11 +50,6 @@ class SoilData(Analyse):
         """Return data from the SoilGrids API as a data frame."""
         if not hasattr(self, "_df"):
             self._get_data()
-        if self._df.empty:
-            line1 = f"No data found for ({self.lat}, {self.lon})"
-            line2 = f"with properties = {self.properties}, depths = {self.depths}, values = {self.values}."
-            line3 = f"Verify the URL: {self.url}"
-            warnings.warn(f"{line1} {line2}\n{line3}")
         return self._df
 
     def _get_data(self):
@@ -64,11 +59,19 @@ class SoilData(Analyse):
         Generate a data frame fom the API response.
         """
         response = self._sg.get()
-        layers = response[self._property_key][self._layer_key]
-        self._df = pd.json_normalize(layers,
+        try:
+            layers = response[self._property_key][self._layer_key]
+            self._df = pd.json_normalize(layers,
                                  record_path=self._record_path,
                                  meta=self._meta)
-        self._clean_data()
+            self._clean_data()
+        except KeyError:
+            self._df = pd.DataFrame()
+        if self._df.empty:
+            line1 = f"No data found for ({self.lat}, {self.lon})"
+            line2 = f"with properties = {self.properties}, depths = {self.depths}, values = {self.values}."
+            line3 = f"Verify the URL: {self.url}"
+            warnings.warn(f"{line1} {line2}\n{line3}")
 
     def _clean_data(self):
         """Clean up the data frame.
