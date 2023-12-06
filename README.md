@@ -2,7 +2,6 @@
 [![build](https://github.com/bvreede/soilstats/actions/workflows/build.yml/badge.svg)](https://github.com/bvreede/soilstats/actions/workflows/build.yml)
 [![sonarcloud](https://github.com/bvreede/soilstats/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/bvreede/soilstats/actions/workflows/sonarcloud.yml)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=bvreede_soilstats&metric=coverage)](https://sonarcloud.io/dashboard?id=bvreede_soilstats)
-[![Documentation Status](https://readthedocs.org/projects/soilstats/badge/?version=latest)](https://soilstats.readthedocs.io/en/latest/?badge=latest)
 
 # Welcome to soilstats!
 
