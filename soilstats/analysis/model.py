@@ -1,6 +1,7 @@
 import pandas as pd
 import rpy2.robjects as ro
 from rpy2.robjects import pandas2ri
+import os
 
 
 class Model:
@@ -20,7 +21,12 @@ class Model:
 
     def _run(self):
         """Run the model."""
-        with open('soilstats/analysis/regression.R', 'r') as f:
+        # define path of R script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        rel_path = "regression.R"
+        regression_path = os.path.join(script_dir, rel_path)
+
+        with open(regression_path, 'r') as f:
             ro.r(f.read())
             r_reg = ro.r['regression']
         with (ro.default_converter + pandas2ri.converter).context():

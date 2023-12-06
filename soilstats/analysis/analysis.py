@@ -98,8 +98,11 @@ class Analyse:
     def _pivot_for_model(cls, df):
         """Perform a pivot on the data frame to prepare for regression analysis."""
         # TODO remove hardcoded variable names
-        return (df.groupby(['lat', 'lon', 'property'])
+        pivot = (df.groupby(['lat', 'lon', 'property'])
                 .agg(value=('values.mean', 'max'))
                 .pivot_table(index=['lat', 'lon'], columns='property', values='value')
-        .reset_index()
-        )
+        .reset_index())
+        properties = df['property'].unique()
+        for property in properties:
+            pivot = cls._numeric_and_remove_nans(pivot, property)
+        return pivot
